@@ -1,11 +1,27 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import styles from '@/proyectomtmstyles/Home.module.css'
+import styles from '../../styles/Home.module.css'
+import { queryDatabase } from '../../db'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const result = await axios.get('/api/afp');
+    setData(result.data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(data);
+ 
   return (
     <>
       <Head>
