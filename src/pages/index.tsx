@@ -11,16 +11,27 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-  const [data, setData] = useState([]);
+  const [dataAfp, setDataAfp] = useState([]);
+  const [dataArl, setDataArl] = useState([]);
+  const [dataAntiguedadComercial, setDataAntiguedadComercial] = useState([]);
   const fetchData = async () => {
-    const result = await axios.get('/api/afp');
-    setData(result.data);
+    
+    const resultAfp = await axios.get('/api/afp');
+    setDataAfp(resultAfp.data);
+
+    const resultArl = await axios.get('/api/afp');
+    setDataArl(resultArl.data);
+
+    const resultAntiguedadComercial = await axios.get('/api/afp');
+    setDataAntiguedadComercial(resultAntiguedadComercial.data);
+   
   };
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  console.log(data);
+  console.log(dataArl);
  
   return (
     <>

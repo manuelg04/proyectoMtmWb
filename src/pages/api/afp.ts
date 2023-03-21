@@ -4,7 +4,12 @@ import { queryDatabase } from '../../../db';
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
-) {
-  const data = await queryDatabase('SELECT * FROM mtm.afp');
-  res.status(200).json(data);
+) 
+{
+  const dataAfp = await queryDatabase('SELECT * FROM mtm.afp');
+  const dataArl = await queryDatabase('SELECT * FROM mtm.arl');
+  const dataAntiguedadComercial = await queryDatabase('SELECT * FROM mtm.antiguedad_comercial');
+  res.status(200).json({ dataAfp, dataArl, dataAntiguedadComercial });
+
 }
+
