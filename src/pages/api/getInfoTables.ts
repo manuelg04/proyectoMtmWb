@@ -12,6 +12,6 @@ export default async function handler(
   const dataAntiguedadComercial = await queryDatabase('SELECT * FROM mtm.antiguedad_comercial');
   res.status(200).json({ dataAfp, dataArl, dataAntiguedadComercial, dataUsuarios });
 
-  const hola: any = 2
+  
 }
 

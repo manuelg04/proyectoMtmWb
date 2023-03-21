@@ -17,7 +17,6 @@ export default function Home() {
   const [dataAntiguedadComercial, setDataAntiguedadComercial] = useState([]);
   const [dataUsuarios, setDataUsuarios] = useState([]);
   const fetchData = async () => {
-    
     const resultAfp = await axios.get(API_URL);
     setDataAfp(resultAfp.data);
 
@@ -26,7 +25,7 @@ export default function Home() {
 
     const resultAntiguedadComercial = await axios.get(API_URL);
     setDataAntiguedadComercial(resultAntiguedadComercial.data);
-   
+
     const resultUsuarios = await axios.get(API_URL);
     setDataUsuarios(resultUsuarios.data);
   };
