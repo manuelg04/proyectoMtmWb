@@ -1,0 +1,14 @@
+.gradient {
+    height: 100vh;
+    background: linear-gradient(to bottom, #9c27b0, #673ab7);
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .logo {
+    width: 200px;
+    margin-bottom: 20px;
+  }
