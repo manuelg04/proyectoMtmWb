@@ -5,6 +5,7 @@ import styles from '../../styles/Home.module.css'
 import { queryDatabase } from '../../db'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { API_URL } from '../../constantes'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -14,17 +15,20 @@ export default function Home() {
   const [dataAfp, setDataAfp] = useState([]);
   const [dataArl, setDataArl] = useState([]);
   const [dataAntiguedadComercial, setDataAntiguedadComercial] = useState([]);
+  const [dataUsuarios, setDataUsuarios] = useState([]);
   const fetchData = async () => {
     
-    const resultAfp = await axios.get('/api/afp');
+    const resultAfp = await axios.get(API_URL);
     setDataAfp(resultAfp.data);
 
-    const resultArl = await axios.get('/api/afp');
+    const resultArl = await axios.get(API_URL);
     setDataArl(resultArl.data);
 
-    const resultAntiguedadComercial = await axios.get('/api/afp');
+    const resultAntiguedadComercial = await axios.get(API_URL);
     setDataAntiguedadComercial(resultAntiguedadComercial.data);
    
+    const resultUsuarios = await axios.get(API_URL);
+    setDataUsuarios(resultUsuarios.data);
   };
 
   useEffect(() => {

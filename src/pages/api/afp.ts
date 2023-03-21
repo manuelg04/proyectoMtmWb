@@ -8,8 +8,9 @@ export default async function handler(
 {
   const dataAfp = await queryDatabase('SELECT * FROM mtm.afp');
   const dataArl = await queryDatabase('SELECT * FROM mtm.arl');
+  const dataUsuarios = await queryDatabase('SELECT * FROM mtm.usuario');
   const dataAntiguedadComercial = await queryDatabase('SELECT * FROM mtm.antiguedad_comercial');
-  res.status(200).json({ dataAfp, dataArl, dataAntiguedadComercial });
+  res.status(200).json({ dataAfp, dataArl, dataAntiguedadComercial, dataUsuarios });
 
 }
 
