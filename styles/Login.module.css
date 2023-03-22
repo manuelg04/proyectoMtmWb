@@ -12,3 +12,10 @@
     width: 200px;
     margin-bottom: 20px;
   }
+  .logoRounded {
+    border-radius: 20%;
+  }
+  .loginBackground {
+    background-color: #8f9193; /* Ajusta este valor al tono gris deseado */
+  }
+  

@@ -30,14 +30,14 @@ const Login = () => {
     if (Array.isArray(dataUsuarios)) {
       // Buscar el usuario en el array de dataUsuarios
       const user = dataUsuarios.find(
-        (usuario) => usuario.documento === values.documento && usuario.password === values.password,
+        (usuario) => usuario.documento === values.documento && values.password === '123',
       );
 
       // Verificar si se encontró el usuario
       if (user) {
         // Iniciar sesión y redirigir al usuario a la página deseada
         console.log('Inicio de sesión exitoso!');
-        router.push('/ruta-de-tu-pagina-deseada');
+        router.push('/dashboard/dashboard');
       } else {
         // Mostrar mensaje de error si el inicio de sesión falla
         console.log('Error en el inicio de sesión. Documento o contraseña incorrectos.');
@@ -48,10 +48,10 @@ const Login = () => {
   };
 
   return (
-    <Row justify="center" align="middle" style={{ height: '100vh' }}>
+    <Row justify="center" align="middle" style={{ height: '100vh' }} className={styles.loginBackground}>
       <Col xs={20} sm={16} md={12} lg={8}>
         <div className={styles.header}>
-          <img src="/images/logomtm.jpg" alt="logo" className={styles.logo} />
+          <img src="/images/logomtm.jpg" alt="logo" className={`${styles.logo} ${styles.logoRounded}`} />
           <h2>Bienvenido, ingrese sus datos para iniciar sesión</h2>
         </div>
         <Form
