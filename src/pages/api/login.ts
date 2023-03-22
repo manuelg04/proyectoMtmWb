@@ -1,48 +1,53 @@
-import bcrypt from 'bcrypt';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { NextApiRequest, NextApiResponse } from 'next';
-import { v4 as uuidv4 } from 'uuid';
+import { createConnection } from 'mysql2/promise';
+import bcrypt from 'bcrypt';
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-  const { username, password } = req.body;
+const dbConfig = {
+  host: 'localhost',
+  user: 'tu-usuario',
+  password: 'tu-contraseña',
+  database: 'mtm',
+};
 
-  async function findUserByUsername(usuario: string) {
-    return users.find((user) => user.username === usuario);
+async function login(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.status(405).end(); // Método no permitido
+    return;
   }
 
-  async function validateUser() {
-    const user = await findUserByUsername(username);
-    if (user && bcrypt.compareSync(password, user.passwordHash)) {
-      return true;
+  const { documento, pass } = req.body;
+
+  const db = await createConnection(dbConfig);
+
+  try {
+    const [rows, fields] = await db.query(
+      'SELECT * FROM usuarios WHERE documento = ? LIMIT 1',
+      [documento]
+    );
+
+    if (rows.length === 0) {
+      res.status(401).end(); // Credenciales inválidas
+      return;
     }
-    return false;
-  }
 
-  function generateSessionId(): string {
-    return uuidv4();
-  }
+    const user = rows[0];
 
-function saveSession (sessionId: string, usuario: string) {
-    const session = {
-      id: sessionId,
-      username: usuario,
-    };
-    sessions.push(session);
-  }
-  
-  async function createSession(usuario: string) {
-    const sessionId = await generateSessionId();
-    await saveSession(sessionId, usuario);
-    return sessionId;
-  }
+    const passwordMatches = await bcrypt.compare(pass, user.pass);
+    if (!passwordMatches) {
+      res.status(401).end(); // Credenciales inválidas
+      return;
+    }
 
-  const validUser = await validateUser();
-
-  if (validUser) {
-    const sessionId = await createSession(username);
-    res.setHeader('Set-Cookie', `sessionId=${sessionId}; path=/; HttpOnly; Secure; SameSite=Strict;`);
-    res.status(200).json({ message: 'inicio de sesión exitoso' });
-  } else {
-    res.status(401).json({ message: 'credenciales inválidas' });
+    req.session.set('user', { documento: user.documento });
+    await req.session.save();
+    res.status(200).end(); // Autenticación exitosa
+  } catch (error) {
+    console.error(error);
+    res.status(500).end(); // Error interno del servidor
+  } finally {
+    await db.end();
   }
 }
+
+export default login;
