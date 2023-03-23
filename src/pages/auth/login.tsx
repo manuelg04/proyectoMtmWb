@@ -16,7 +16,7 @@ const Login = () => {
 
   const fetchData = async () => {
     const resultUsuarios = await axios.get(API_URL);
-    console.log(resultUsuarios.data.dataUsuarios);
+    // console.log(resultUsuarios.data.dataUsuarios);
     setDataUsuarios(resultUsuarios.data.dataUsuarios);
   };
   useEffect(() => {
@@ -24,27 +24,34 @@ const Login = () => {
   }, []);
 
   const onFinish = async (values: any) => {
-    console.log('Received values of form: ', values);
+    console.log(values);
+    const response = await axios.post('/api/auth/login', values);
 
-    // Verificar si dataUsuarios es un array
-    if (Array.isArray(dataUsuarios)) {
-      // Buscar el usuario en el array de dataUsuarios
-      const user = dataUsuarios.find(
-        (usuario) => usuario.documento === values.documento && values.password === '123',
-      );
-
-      // Verificar si se encontró el usuario
-      if (user) {
-        // Iniciar sesión y redirigir al usuario a la página deseada
-        console.log('Inicio de sesión exitoso!');
-        router.push('/dashboard/dashboard');
-      } else {
-        // Mostrar mensaje de error si el inicio de sesión falla
-        console.log('Error en el inicio de sesión. Documento o contraseña incorrectos.');
-      }
-    } else {
-      console.log('Error: dataUsuarios no es un array.');
+    if (response.status === 200) {
+      router.push('/dashboard');
     }
+
+    console.log(response);
+
+    // // Verificar si dataUsuarios es un array
+    // if (Array.isArray(dataUsuarios)) {
+    //   // Buscar el usuario en el array de dataUsuarios
+    //   const user = dataUsuarios.find(
+    //     (usuario) => usuario.documento === values.documento && values.password === '123',
+    //   );
+
+    //   // Verificar si se encontró el usuario
+    //   if (user) {
+    //     // Iniciar sesión y redirigir al usuario a la página deseada
+    //     console.log('Inicio de sesión exitoso!');
+    //     router.push('/dashboard');
+    //   } else {
+    //     // Mostrar mensaje de error si el inicio de sesión falla
+    //     console.log('Error en el inicio de sesión. Documento o contraseña incorrectos.');
+    //   }
+    // } else {
+    //   console.log('Error: dataUsuarios no es un array.');
+    // }
   };
 
   return (
@@ -62,13 +69,13 @@ const Login = () => {
         >
           <Form.Item
             name="documento"
-            rules={[{ required: true, message: 'Please input your document!' }]}
+            rules={[{ required: true, message: 'Por favor ingresa tu documento!' }]}
           >
             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Documento" />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
+            rules={[{ required: true, message: 'Por favor ingresa tu clave!' }]}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
@@ -79,7 +86,7 @@ const Login = () => {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Log in
+              Iniciar Sesion
             </Button>
           </Form.Item>
         </Form>

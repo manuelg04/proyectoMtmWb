@@ -1,0 +1,26 @@
+/* components/Dashboard/Dashboard.module.css */
+.logo {
+    height: 32px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .sider {
+    overflow: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+  }
+  
+  .site-layout {
+    margin-left: 200px;
+  }
+  
+  .site-layout-background {
+    background: #fff;
+  }
+  
+  .site-layout .site-layout-background {
+    min-height: 100vh;
+  }
+  
