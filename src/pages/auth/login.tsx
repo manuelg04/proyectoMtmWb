@@ -3,55 +3,34 @@ import {
   Form, Input, Button, Col, Row,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { message } from 'antd';
 import styles from '../../../styles/Login.module.css';
-import { queryDatabase } from '../../../db';
-import { API_URL } from '../../../constantes';
 
 const Login = () => {
   const router = useRouter();
-  const [dataUsuarios, setDataUsuarios] = useState([]);
-
-  const fetchData = async () => {
-    const resultUsuarios = await axios.get(API_URL);
-    // console.log(resultUsuarios.data.dataUsuarios);
-    setDataUsuarios(resultUsuarios.data.dataUsuarios);
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [loading, setLoading] = useState(false); // Añade un estado para manejar la carga
 
   const onFinish = async (values: any) => {
-    console.log(values);
-    const response = await axios.post('/api/auth/login', values);
+    setLoading(true); // Cambia el estado de carga a verdadero
+    try {
+      const response = await axios.post('/api/auth/login', values);
+      console.log(response);
 
-    if (response.status === 200) {
-      router.push('/dashboard');
+      if (response.status === 200) {
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        message.error('Credenciales inválidas. Por favor, inténtalo de nuevo.');
+      } else {
+        message.error('Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.');
+      }
+    } finally {
+      setLoading(false);
     }
-
-    console.log(response);
-
-    // // Verificar si dataUsuarios es un array
-    // if (Array.isArray(dataUsuarios)) {
-    //   // Buscar el usuario en el array de dataUsuarios
-    //   const user = dataUsuarios.find(
-    //     (usuario) => usuario.documento === values.documento && values.password === '123',
-    //   );
-
-    //   // Verificar si se encontró el usuario
-    //   if (user) {
-    //     // Iniciar sesión y redirigir al usuario a la página deseada
-    //     console.log('Inicio de sesión exitoso!');
-    //     router.push('/dashboard');
-    //   } else {
-    //     // Mostrar mensaje de error si el inicio de sesión falla
-    //     console.log('Error en el inicio de sesión. Documento o contraseña incorrectos.');
-    //   }
-    // } else {
-    //   console.log('Error: dataUsuarios no es un array.');
-    // }
   };
 
   return (
@@ -85,7 +64,7 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button">
+            <Button type="primary" htmlType="submit" className="login-form-button" loading={loading}>
               Iniciar Sesion
             </Button>
           </Form.Item>
