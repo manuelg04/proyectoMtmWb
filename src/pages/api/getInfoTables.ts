@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { NextApiRequest, NextApiResponse } from 'next';
-import { queryDatabase } from '../../../db';
+import { queryDatabase } from '../../../src/models/db';
 
 export default async function handler(
   req: NextApiRequest,

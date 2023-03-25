@@ -12,30 +12,6 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-  const [dataAfp, setDataAfp] = useState([]);
-  const [dataArl, setDataArl] = useState([]);
-  const [dataAntiguedadComercial, setDataAntiguedadComercial] = useState([]);
-  const [dataUsuarios, setDataUsuarios] = useState([]);
-  const fetchData = async () => {
-    const resultAfp = await axios.get(API_URL);
-    setDataAfp(resultAfp.data);
-
-    const resultArl = await axios.get(API_URL);
-    setDataArl(resultArl.data);
-
-    const resultAntiguedadComercial = await axios.get(API_URL);
-    setDataAntiguedadComercial(resultAntiguedadComercial.data);
-
-    const resultUsuarios = await axios.get(API_URL);
-    setDataUsuarios(resultUsuarios.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  console.log(dataArl);
- 
   return (
     <>
       <Head>

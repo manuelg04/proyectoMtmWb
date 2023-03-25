@@ -6,7 +6,7 @@ export default function logoutHandler(req, res) {
   const { myTokenName } = req.cookies;
 
   if (!myTokenName) {
-    return res.status(401).json({ error: 'NO token' });
+    return res.status(401).json({ error: 'NO token' });//revisar que cuando expire el token me saque del sistema
   }
 
   try {

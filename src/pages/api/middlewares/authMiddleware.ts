@@ -7,7 +7,7 @@ import cookie from 'cookie';
 export async function authMiddleware(request: NextRequest) {
   const cookies = cookie.parse(request.headers.get('cookie') || '');
   const jwt = cookies.myTokenName;
-  console.log(jwt);
+  //console.log(jwt);
 
   if (request.nextUrl.pathname.includes('/dashboard')) {
     if (jwt === undefined) {
@@ -15,10 +15,10 @@ export async function authMiddleware(request: NextRequest) {
     }
     try {
       const { payload } = await jwtVerify(jwt, new TextEncoder().encode('secret'));
-      console.log(payload);
+      //console.log(payload);
       return NextResponse.next();
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       return NextResponse.redirect(new URL('auth/login', request.url));
     }
   }

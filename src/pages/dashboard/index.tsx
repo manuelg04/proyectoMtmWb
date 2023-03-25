@@ -1,10 +1,12 @@
+/* eslint-disable promise/always-return */
+/* eslint-disable promise/catch-or-return */
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
 // components/Dashboard/Dashboard.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-  Layout, Menu, Table, Button, Modal, Form, Input, Select,
+  Layout, Menu, Table, Button, Modal, Form, Input, Select, Space, Dropdown, AntMenu,
 } from 'antd';
 import {
   UserOutlined,
@@ -13,9 +15,11 @@ import {
   HomeOutlined,
   ForkOutlined,
   ContainerOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import styles from '../../../styles/Dashboard.module.css';
+import { createUser, getAllUsers } from '../api/models/db';
 
 const {
   Header, Content, Footer, Sider,
@@ -69,9 +73,18 @@ const Dashboard: React.FC = () => {
       key: 'role',
     },
   ];
-  const onFinish = async (values: any) => {
+
+  const newUser = async (values: any) => {
+    const usuario = {
+      nombres: values.nombres,
+      documento: values.documento,
+      correo: values.correo,
+      cargo: values.cargo,
+      sucursal: values.sucursal,
+    };
+    console.log(usuario);
     try {
-      await axios.post('/api/usuarios', values);
+      await createUser(usuario);
       console.log('Usuario insertado correctamente');
       setModalVisible(false);
     } catch (error) {
@@ -89,7 +102,7 @@ const Dashboard: React.FC = () => {
             </Button>
             <Modal
               title="Crear nuevos usuarios"
-              visible={modalVisible}
+              open={modalVisible}
               onCancel={handleCancel}
               okText="Crear"
               cancelText="Cancelar"
@@ -99,23 +112,21 @@ const Dashboard: React.FC = () => {
             >
               <Form
                 layout="vertical"
-                onFinish={(values) => {
-                  console.log(values); // Imprimir el objeto con los valores en la consola
-                }}
+                onFinish={(values) => newUser(values)}
                 ref={(el) => {
                   form = el; // Asignar la referencia del formulario al objeto form
                 }}
               >
-                <Form.Item label="Nombre completo" name="nombreCompleto">
+                <Form.Item label="Nombre completo" name="nombres">
                   <Input />
                 </Form.Item>
-                <Form.Item label="Número de documento" name="numdoc">
+                <Form.Item label="Número de documento" name="documento">
                   <Input />
                 </Form.Item>
                 <Form.Item label="Cargo" name="cargo">
                   <Input />
                 </Form.Item>
-                <Form.Item label="Email corporativo" name="emailCorporativo">
+                <Form.Item label="Email corporativo" name="correo">
                   <Input />
                 </Form.Item>
                 <Form.Item label="Sucursal/Zona a la que pertenece" name="sucursal">
@@ -152,8 +163,10 @@ const Dashboard: React.FC = () => {
         <pre>
           {JSON.stringify(user, null, 2)}
         </pre>
-        <button onClick={() => getProfile()}>profile</button>
-        <button onClick={() => logout()}>Logout</button>
+        <Space wrap style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+          <button onClick={() => getProfile()}>profile</button>
+          <Button type="primary" onClick={() => logout()} style={{ alignSelf: 'flex-start' }}>Logout</Button>
+        </Space>
       </div>
       <Layout style={{ minHeight: '100vh' }}>
         <Sider className={styles.sider}>

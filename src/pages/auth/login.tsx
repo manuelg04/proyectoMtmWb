@@ -11,26 +11,21 @@ import styles from '../../../styles/Login.module.css';
 
 const Login = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false); // Añade un estado para manejar la carga
+  const [loading, setLoading] = useState(false); // Añade un estado para manejar la carga, typar
 
   const onFinish = async (values: any) => {
     setLoading(true); // Cambia el estado de carga a verdadero
     try {
-      const response = await axios.post('/api/auth/login', values);
+      const response = await axios.post('/api/controllers/login', values);
       console.log(response);
 
       if (response.status === 200) {
         router.push('/dashboard');
       }
     } catch (error) {
-      if (error.response && error.response.status === 500) {
-        message.error('Credenciales inválidas. Por favor, inténtalo de nuevo.');
-      } else {
-        message.error('Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.');
-      }
-    } finally {
-      setLoading(false);
+      message.error('Cedula o contraseña incorrecta');
     }
+    setLoading(false); // Cambia el estado de carga a falso
   };
 
   return (

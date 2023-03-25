@@ -6,17 +6,16 @@
 // pages/api/auth/login.ts
 import { sign } from 'jsonwebtoken';
 import { serialize } from 'cookie';
-import { compare } from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createHash } from 'crypto';
-import { getUserCredentials } from './db';
+import { getUserCredentials } from '../models/db';
 
 async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
-  const { documento, password } = req.body;
+  const { documento, password } = req.body; // aqui puedo traer los datos del usuario
   // console.log('Documento:', documento); // Agrega esto para depurar
   // console.log('Password:', password); // Agrega esto para depurar
   const user = await getUserCredentials(documento);
-  // console.log('User:', user); // Agrega esto para depurar
+  console.log('User:', user); // Agrega esto para depurar
 
   if (user) {
     const hashedPassword = createHash('sha512').update(password).digest('hex');
@@ -29,7 +28,7 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
     if (match === true) {
       const token = sign(
         {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, //revisar a detalle expiracion del token
           documento,
           username: user.username,
         },
