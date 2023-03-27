@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-shadow */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
@@ -19,6 +20,7 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+import cookie from 'cookie';
 import styles from '../../../styles/Dashboard.module.css';
 
 const {
@@ -30,6 +32,7 @@ const Dashboard: React.FC = () => {
   let form:any;
   const [modalVisible, setModalVisible] = useState(false);
   const [usersTable, setUsersTable] = useState([]);
+  const [loggedInUser, setLoggedInUser] = useState('');
   const [user, setUser] = useState({
     email: '',
     username: '',
@@ -38,14 +41,13 @@ const Dashboard: React.FC = () => {
     axios
       .get('/api/controllers/userController')
       .then((response) => {
-        console.log('Usuarios:', response.data); // Imprimir en consola del navegador
+        //console.log('Usuarios:', response.data); // Imprimir en consola del navegador
         setUsersTable(response.data);
       })
       .catch((error) => {
         console.error('Error al obtener usuarios:', error);
       });
   }, []);
-
 
   const showModal = () => {
     setModalVisible(true);
@@ -67,7 +69,6 @@ const Dashboard: React.FC = () => {
     documento: user.documento,
   }));
 
-
   const columns = [
     {
       title: 'Nombre',
@@ -80,6 +81,23 @@ const Dashboard: React.FC = () => {
       key: 'documento',
     },
   ];
+
+  const getLoggedInUser = async () => {
+    try {
+      const cookies = cookie.parse(document.cookie); // Parsea las cookies del documento
+      const documento = cookies.userDocumento; // Obtén el documento del usuario de la cookie
+      if (documento) {
+        const response = await axios.get(`/api/controllers/userName?documento=${documento}`);
+        setLoggedInUser(response.data.nombres); // Actualizar el estado loggedInUser con el nombre del usuario
+        console.log(' nombre del usuario', response.data);
+      }
+    } catch (error) {
+      console.log('Error al obtener el nombre del usuario:', error);
+    }
+  };
+  useEffect(() => {
+    getLoggedInUser();
+  }, []);
 
   const content = (() => {
     switch (selectedKey) {
@@ -150,7 +168,9 @@ const Dashboard: React.FC = () => {
     <>
       <div>
         <pre>
-          {JSON.stringify(user, null, 2)}
+          Bienvenido,
+          {' '}
+          {loggedInUser}
         </pre>
         <Space wrap style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
           <button onClick={() => getProfile()}>profile</button>

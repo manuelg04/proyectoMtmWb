@@ -15,20 +15,18 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   // console.log('Documento:', documento); // Agrega esto para depurar
   // console.log('Password:', password); // Agrega esto para depurar
   const user = await getUserCredentials(documento);
-  console.log('User:', user); // Agrega esto para depurar
 
   if (user) {
     const hashedPassword = createHash('sha512').update(password).digest('hex');
-    console.log(hashedPassword);
     const match = hashedPassword === user.pass;
-    console.log(user.pass);
+
     // console.log(user.pass);
     // console.log('Match:', match); // Agrega esto para depurar
 
     if (match === true) {
       const token = sign(
         {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, //revisar a detalle expiracion del token
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // revisar a detalle expiracion del token
           documento,
           username: user.username,
         },
@@ -42,8 +40,15 @@ async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
         maxAge: 1000 * 60 * 60 * 24 * 30,
         path: '/',
       });
+      const serializedDocumento = serialize('userDocumento', documento, {
+        httpOnly: false, // La cookie puede ser leída desde el lado del cliente
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        path: '/',
+      });
 
-      res.setHeader('Set-Cookie', serialized);
+      res.setHeader('Set-Cookie', [serialized, serializedDocumento]);
       return res.status(200).json({ message: 'Login successful' });
     }
   }
