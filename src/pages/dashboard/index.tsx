@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable react/button-has-type */
@@ -19,7 +20,6 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import styles from '../../../styles/Dashboard.module.css';
-import { createUser, getAllUsers } from '../api/models/db';
 
 const {
   Header, Content, Footer, Sider,
@@ -29,10 +29,23 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
   let form:any;
   const [modalVisible, setModalVisible] = useState(false);
+  const [usersTable, setUsersTable] = useState([]);
   const [user, setUser] = useState({
     email: '',
     username: '',
   });
+  useEffect(() => {
+    axios
+      .get('/api/controllers/userController')
+      .then((response) => {
+        console.log('Usuarios:', response.data); // Imprimir en consola del navegador
+        setUsersTable(response.data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener usuarios:', error);
+      });
+  }, []);
+
 
   const showModal = () => {
     setModalVisible(true);
@@ -48,49 +61,25 @@ const Dashboard: React.FC = () => {
     setSelectedKey(e.key);
   };
 
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Usuario 1',
-      role: 'Administrador',
-    },
-    {
-      key: '2',
-      name: 'Usuario 2',
-      role: 'Operador',
-    },
-  ];
+  const dataSource = usersTable.map((user, index) => ({ // Utilizar el estado users en lugar del array estático
+    key: index,
+    nombre: user.nombres,
+    documento: user.documento,
+  }));
+
 
   const columns = [
     {
       title: 'Nombre',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'nombre',
+      key: 'nombre',
     },
     {
-      title: 'Rol',
-      dataIndex: 'role',
-      key: 'role',
+      title: 'Documento',
+      dataIndex: 'documento',
+      key: 'documento',
     },
   ];
-
-  const newUser = async (values: any) => {
-    const usuario = {
-      nombres: values.nombres,
-      documento: values.documento,
-      correo: values.correo,
-      cargo: values.cargo,
-      sucursal: values.sucursal,
-    };
-    console.log(usuario);
-    try {
-      await createUser(usuario);
-      console.log('Usuario insertado correctamente');
-      setModalVisible(false);
-    } catch (error) {
-      console.error('Error al insertar el usuario:', error);
-    }
-  };
 
   const content = (() => {
     switch (selectedKey) {

@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { authMiddleware } from '../middlewares/authMiddleware';
 
 export async function middleware(req: NextRequest) {

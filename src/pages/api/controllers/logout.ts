@@ -1,8 +1,9 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { verify } from 'jsonwebtoken';
 import { serialize } from 'cookie';
 
-export default function logoutHandler(req, res) {
+export default function logoutHandler(req: NextApiRequest, res: NextApiResponse) {
   const { myTokenName } = req.cookies;
 
   if (!myTokenName) {
