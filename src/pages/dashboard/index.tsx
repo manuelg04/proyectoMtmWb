@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
     axios
       .get('/api/controllers/userController')
       .then((response) => {
-        //console.log('Usuarios:', response.data); // Imprimir en consola del navegador
+        // console.log('Usuarios:', response.data); // Imprimir en consola del navegador
         setUsersTable(response.data);
       })
       .catch((error) => {
@@ -99,6 +99,25 @@ const Dashboard: React.FC = () => {
     getLoggedInUser();
   }, []);
 
+  const newUser = async (values: any) => {
+    const user = {
+      idusuario: values.idusuario,
+      nombres: values.nombres,
+      documento: values.documento,
+      cargo: values.cargo,
+      correo: values.correo,
+      sucursal: values.sucursal,
+      rolid: 3,
+    };
+
+    try {
+      const res = await axios.post('/api/controllers/newUser', user);
+      alert('Usuario creado exitosamente');
+    } catch (error) {
+      console.log('Error al crear el usuario:', error);
+      alert('Error al crear el usuario');
+    }
+  };
   const content = (() => {
     switch (selectedKey) {
       case '1':
