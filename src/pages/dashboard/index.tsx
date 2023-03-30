@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-  Layout, Menu, Table, Button, Modal, Form, Input, Select, Space, Dropdown, AntMenu,
+  Layout, Menu, Table, Button, Modal, Form, Input, Select, Space, Dropdown, AntMenu, message,
 } from 'antd';
 import {
   UserOutlined,
@@ -21,13 +21,14 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import cookie from 'cookie';
+import { NextComponentType } from 'next';
 import styles from '../../../styles/Dashboard.module.css';
 
 const {
   Header, Content, Footer, Sider,
 } = Layout;
 
-const Dashboard: React.FC = () => {
+const Dashboard: NextComponentType = () => {
   const router = useRouter();
   let form:any;
   const [modalVisible, setModalVisible] = useState(false);
@@ -111,11 +112,11 @@ const Dashboard: React.FC = () => {
     };
 
     try {
-      const res = await axios.post('/api/controllers/newUser', user);
-      alert('Usuario creado exitosamente');
+      await axios.post('/api/controllers/newUser', user);
+      message.success('Usuario creado exitosamente');
     } catch (error) {
       console.log('Error al crear el usuario:', error);
-      alert('Error al crear el usuario');
+      message.error('Error al crear el usuario');
     }
   };
   const content = (() => {

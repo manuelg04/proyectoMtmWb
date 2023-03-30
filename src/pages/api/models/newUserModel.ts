@@ -10,7 +10,6 @@ export interface User {
     sucursal: string;
     rolid: number;
   }
-
 export async function insertUser(user: User): Promise<void> {
   await db.query(
     'INSERT INTO usuario (nombres, documento, cargo, correo, sucursal, rolid) VALUES (?, ?, ?, ?, ?, ?)',

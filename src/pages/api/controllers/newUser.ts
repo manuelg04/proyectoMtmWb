@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { insertUser, User } from '../models/newUserModel';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function CreateUserHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
       const user: User = req.body;
