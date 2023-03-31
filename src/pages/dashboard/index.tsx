@@ -35,6 +35,7 @@ const {
 const Dashboard: NextComponentType = () => {
   const router = useRouter();
   let form:any;
+  const [searchValue, setSearchValue] = useState('');
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedCargo, setSelectedCargo] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -92,6 +93,14 @@ const Dashboard: NextComponentType = () => {
   const handleMenuClick = (e: any) => {
     setSelectedKey(e.key);
   };
+
+  const filteredData = usersTable.filter((user: Usuario) => {
+    const searchTerm = searchValue.toLowerCase();
+    return (
+      user.nombres.toLowerCase().includes(searchTerm)
+      || user.documento.toLowerCase().includes(searchTerm)
+    );
+  });
 
   const dataSource = usersTable
     .map((user:Usuario, index) => ({
@@ -165,6 +174,11 @@ const Dashboard: NextComponentType = () => {
             <Button type="primary" style={{ marginBottom: 16 }} onClick={showModal}>
               Crear nuevos usuarios
             </Button>
+            <Input.Search
+              placeholder="Buscar..."
+              style={{ marginLeft: 16, marginBottom: 16 }}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
             <Modal
               title="Crear nuevos usuarios"
               open={modalVisible}
@@ -223,7 +237,15 @@ const Dashboard: NextComponentType = () => {
                 </Form.Item>
               </Form>
             </Modal>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table
+              dataSource={filteredData.map((user: Usuario, index) => ({
+                key: index,
+                nombre: user.nombres,
+                documento: user.documento,
+                fechad_creacion: user.fechad_creacion,
+              }))}
+              columns={columns}
+            />
           </>
         );
       default:
