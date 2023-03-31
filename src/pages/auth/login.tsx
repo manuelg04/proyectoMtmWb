@@ -8,17 +8,17 @@ import axios from 'axios';
 import { useState } from 'react';
 import { message } from 'antd';
 import styles from '../../../styles/Login.module.css';
+import { Usuario } from '../../../tipos';
+import { API_CONTROLLER_LOGIN } from '../../../constantes';
 
 const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // Añade un estado para manejar la carga, typar
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: Usuario) => {
     setLoading(true); // Cambia el estado de carga a verdadero
     try {
-      const response = await axios.post('/api/controllers/login', values);
-      console.log(response);
-
+      const response = await axios.post(API_CONTROLLER_LOGIN, values);
       if (response.status === 200) {
         router.push('/dashboard');
       }

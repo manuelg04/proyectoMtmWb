@@ -23,6 +23,8 @@ import { useRouter } from 'next/router';
 import cookie from 'cookie';
 import { NextComponentType } from 'next';
 import styles from '../../../styles/Dashboard.module.css';
+import { Usuario } from '../../../tipos';
+import { API_CONTROLLER_NEWUSER, API_CONTROLLER_LOGOUT, API_CONTROLLER_USERCONTROLLER } from '../../../constantes';
 
 const {
   Header, Content, Footer, Sider,
@@ -40,7 +42,7 @@ const Dashboard: NextComponentType = () => {
   });
   useEffect(() => {
     axios
-      .get('/api/controllers/userController')
+      .get(API_CONTROLLER_USERCONTROLLER)
       .then((response) => {
         // console.log('Usuarios:', response.data); // Imprimir en consola del navegador
         setUsersTable(response.data);
@@ -64,7 +66,7 @@ const Dashboard: NextComponentType = () => {
     setSelectedKey(e.key);
   };
 
-  const dataSource = usersTable.map((user, index) => ({ // Utilizar el estado users en lugar del array estático
+  const dataSource = usersTable.map((user:Usuario, index) => ({ // Utilizar el estado users en lugar del array estático
     key: index,
     nombre: user.nombres,
     documento: user.documento,
@@ -100,7 +102,7 @@ const Dashboard: NextComponentType = () => {
     getLoggedInUser();
   }, []);
 
-  const newUser = async (values: any) => {
+  const newUser = async (values: Usuario) => {
     const user = {
       idusuario: values.idusuario,
       nombres: values.nombres,
@@ -112,7 +114,7 @@ const Dashboard: NextComponentType = () => {
     };
 
     try {
-      await axios.post('/api/controllers/newUser', user);
+      await axios.post(API_CONTROLLER_NEWUSER, user);
       message.success('Usuario creado exitosamente');
     } catch (error) {
       console.log('Error al crear el usuario:', error);
@@ -176,7 +178,7 @@ const Dashboard: NextComponentType = () => {
 
   const logout = async () => {
     try {
-      const response = await axios.post('/api/auth/logout');
+      const response = await axios.post(API_CONTROLLER_LOGOUT);
       router.push('/auth/login');
       console.log(response);
     } catch (error) {
