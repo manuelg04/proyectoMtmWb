@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-shadow */
 /* eslint-disable promise/always-return */
@@ -8,7 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-  Layout, Menu, Table, Button, Modal, Form, Input, Select, Space, Dropdown, AntMenu, message,
+  Layout, Menu, Table, Button, Modal, Form, Input, DatePicker, Space, Dropdown, AntMenu, message, Select,
 } from 'antd';
 import {
   UserOutlined,
@@ -22,6 +23,7 @@ import {
 import { useRouter } from 'next/router';
 import cookie from 'cookie';
 import { NextComponentType } from 'next';
+import dayjs from 'dayjs';
 import styles from '../../../styles/Dashboard.module.css';
 import { Usuario } from '../../../tipos';
 import { API_CONTROLLER_NEWUSER, API_CONTROLLER_LOGOUT, API_CONTROLLER_USERCONTROLLER } from '../../../constantes';
@@ -33,6 +35,8 @@ const {
 const Dashboard: NextComponentType = () => {
   const router = useRouter();
   let form:any;
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedCargo, setSelectedCargo] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [usersTable, setUsersTable] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState('');
@@ -52,6 +56,29 @@ const Dashboard: NextComponentType = () => {
       });
   }, []);
 
+  const handleRoleSelection = (value: string) => {
+    let roleid;
+    let cargo;
+    switch (value) {
+      case 'Conductor':
+        roleid = 5;
+        cargo = 'Conductor';
+        break;
+      case 'Agente':
+        roleid = 3;
+        cargo = 'Agente';
+        break;
+      case 'Seguridad':
+        roleid = 2;
+        cargo = 'Seguridad';
+        break;
+      default:
+        roleid = null;
+        cargo = null;
+    }
+    setSelectedRole(roleid);
+    setSelectedCargo(cargo);
+  };
   const showModal = () => {
     setModalVisible(true);
   };
@@ -66,11 +93,13 @@ const Dashboard: NextComponentType = () => {
     setSelectedKey(e.key);
   };
 
-  const dataSource = usersTable.map((user:Usuario, index) => ({ // Utilizar el estado users en lugar del array estático
-    key: index,
-    nombre: user.nombres,
-    documento: user.documento,
-  }));
+  const dataSource = usersTable
+    .map((user:Usuario, index) => ({
+      key: index,
+      nombre: user.nombres,
+      documento: user.documento,
+      fechad_creacion: user.fechad_creacion,
+    }));
 
   const columns = [
     {
@@ -82,6 +111,11 @@ const Dashboard: NextComponentType = () => {
       title: 'Documento',
       dataIndex: 'documento',
       key: 'documento',
+    },
+    {
+      title: 'Fecha de creacion',
+      dataIndex: 'fechad_creacion',
+      key: 'fechad_creacion',
     },
   ];
 
@@ -104,20 +138,22 @@ const Dashboard: NextComponentType = () => {
 
   const newUser = async (values: Usuario) => {
     const user = {
+      fechad_creacion: values.fechad_creacion,
       idusuario: values.idusuario,
       nombres: values.nombres,
       documento: values.documento,
-      cargo: values.cargo,
+      celular: values.celular,
       correo: values.correo,
       sucursal: values.sucursal,
-      rolid: 3,
+      rolid: values.rolid,
+      cargo: values.cargo,
     };
 
     try {
       await axios.post(API_CONTROLLER_NEWUSER, user);
       message.success('Usuario creado exitosamente');
+      setModalVisible(false);
     } catch (error) {
-      console.log('Error al crear el usuario:', error);
       message.error('Error al crear el usuario');
     }
   };
@@ -146,13 +182,37 @@ const Dashboard: NextComponentType = () => {
                   form = el; // Asignar la referencia del formulario al objeto form
                 }}
               >
+                <Form.Item
+                  label="Fecha de creación"
+                  name="fechad_creacion"
+                  initialValue={dayjs().format('DD/MM/YYYY')}
+                >
+                  <Input disabled />
+                </Form.Item>
+                <Form.Item
+                  label="ID del rol"
+                  name="cargo"
+                  initialValue={selectedRole}
+                >
+                  <Input disabled />
+                </Form.Item>
+                <Form.Item label="Seleccione el tipo de usuario" name="cargo">
+                  <Select
+                    placeholder="Seleccionar tipo de usuario"
+                    onChange={(value) => handleRoleSelection(value)}
+                  >
+                    <Select.Option value="Conductor">Conductor</Select.Option>
+                    <Select.Option value="Agente">Agente</Select.Option>
+                    <Select.Option value="Seguridad">Seguridad</Select.Option>
+                  </Select>
+                </Form.Item>
                 <Form.Item label="Nombre completo" name="nombres">
                   <Input />
                 </Form.Item>
                 <Form.Item label="Número de documento" name="documento">
                   <Input />
                 </Form.Item>
-                <Form.Item label="Cargo" name="cargo">
+                <Form.Item label="Celular" name="celular">
                   <Input />
                 </Form.Item>
                 <Form.Item label="Email corporativo" name="correo">

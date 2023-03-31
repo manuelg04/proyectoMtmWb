@@ -1,4 +1,7 @@
+/* eslint-disable camelcase */
 export interface Usuario {
+    rolid: number;
+    fechad_creacion: string
     idusuario: number;
     nombres: string;
     correo: string;
