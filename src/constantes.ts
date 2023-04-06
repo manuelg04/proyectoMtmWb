@@ -3,6 +3,7 @@ export const API_CONTROLLER_NEWUSER_URL = '/api/controllers/newUser';
 export const API_CONTROLLER_USERCONTROLLER_URL = '/api/controllers/user';
 export const API_CONTROLLER_LOGOUT_URL = '/api/controllers/logout';
 export const API_CONTROLLER_LOGIN_URL = '/api/controllers/login';
+export const API_CONTROLLER_UPDATEUSER_URL = '/api/controllers/updateUser';
 
 
 export const B = '';

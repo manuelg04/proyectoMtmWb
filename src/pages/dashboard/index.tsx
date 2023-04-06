@@ -30,8 +30,8 @@ import {
   API_CONTROLLER_NEWUSER_URL,
   API_CONTROLLER_LOGOUT_URL,
   API_CONTROLLER_USERCONTROLLER_URL,
+  API_CONTROLLER_UPDATEUSER_URL,
 } from '../../constantes';
-import { getAllUsers } from '../api/models/userByDoc';
 
 const {
   Header, Content, Footer, Sider,
@@ -46,6 +46,8 @@ const Dashboard: NextComponentType = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [usersTable, setUsersTable] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState('');
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [user, setUser] = useState({
     email: '',
     username: '',
@@ -60,6 +62,12 @@ const Dashboard: NextComponentType = () => {
         console.error('Error al obtener usuarios:', error);
       });
   }, []);
+
+  const handleEdit = (user:any) => {
+    console.log(user);
+    setSelectedUser(user);
+    setEditModalVisible(true);
+  };
 
   const handleRoleSelection = (value: string) => {
     let roleid;
@@ -90,6 +98,7 @@ const Dashboard: NextComponentType = () => {
 
   const handleCancel = () => {
     setModalVisible(false);
+    setEditModalVisible(false);
   };
 
   const [selectedKey, setSelectedKey] = useState('1');
@@ -120,6 +129,9 @@ const Dashboard: NextComponentType = () => {
       nombre: user.nombres,
       documento: user.documento,
       fechad_creacion: user.fechad_creacion,
+      celular: user.celular,
+      sucursal: user.sucursal,
+      correo: user.correo,
     }));
 
   const columns = [
@@ -139,10 +151,25 @@ const Dashboard: NextComponentType = () => {
       key: 'fechad_creacion',
     },
     {
+      title: 'Celular',
+      dataIndex: 'celular',
+      key: 'celular',
+    },
+    {
+      title: 'Sucursal',
+      dataIndex: 'sucursal',
+      key: 'sucursal',
+    },
+    {
+      title: 'Correo',
+      dataIndex: 'correo',
+      key: 'correo',
+    },
+    {
       title: 'Acciones',
       dataIndex: 'acciones',
       key: 'acciones',
-      render: (_text: any, record: any) => (
+      render: (_text: any, record: Usuario) => (
         <Space size="middle">
           <Button type="primary" onClick={() => handleEdit(record)}>Editar</Button>
           <Button type="danger" onClick={() => handleDelete(record)}>Borrar</Button>
@@ -150,6 +177,11 @@ const Dashboard: NextComponentType = () => {
       ),
     },
   ];
+
+  const handleDelete = (record: any) => {
+    console.log('Borrar usuario:', record);
+    // Implementa la lógica para borrar el usuario aquí
+  };
 
   const getLoggedInUser = async () => {
     try {
@@ -189,6 +221,7 @@ const Dashboard: NextComponentType = () => {
       message.error('Error al crear el usuario');
     }
   };
+
   const content = (() => {
     switch (selectedKey) {
       case '1':
@@ -203,10 +236,13 @@ const Dashboard: NextComponentType = () => {
               onChange={handleSearch}
             />
             <Modal
-              title="Crear nuevos usuarios"
-              open={modalVisible}
-              onCancel={handleCancel}
-              okText="Crear"
+              title={selectedUser ? 'Editar usuario' : 'Crear nuevos usuarios'}
+              open={modalVisible || editModalVisible}
+              onCancel={() => {
+                handleCancel();
+                setSelectedUser(null);
+              }}
+              okText={selectedUser ? 'Actualizar' : 'Crear'}
               cancelText="Cancelar"
               onOk={() => {
                 form.submit(); // Agregar esta línea para enviar el formulario
@@ -324,6 +360,9 @@ const Dashboard: NextComponentType = () => {
                 nombre: user.nombres,
                 documento: user.documento,
                 fechad_creacion: user.fechad_creacion,
+                celular: user.celular,
+                correo: user.correo,
+                sucursal: user.sucursal,
               }))}
               columns={columns}
             />
