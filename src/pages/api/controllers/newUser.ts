@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { insertUser, User } from '../models/newUserModel';
+import { insertUser, User } from '../models/newUser';
 
 export default async function CreateUserHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

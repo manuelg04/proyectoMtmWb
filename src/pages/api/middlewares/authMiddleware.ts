@@ -1,8 +1,10 @@
+/* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
 // middleware/authMiddleware.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import cookie from 'cookie';
+import logoutHandler from '../controllers/logout';
 
 export async function authMiddleware(request: NextRequest) {
   const cookies = cookie.parse(request.headers.get('cookie') || '');

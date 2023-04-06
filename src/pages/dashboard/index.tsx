@@ -6,7 +6,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
 // components/Dashboard/Dashboard.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import {
   Layout, Menu, Table, Button, Modal, Form, Input, DatePicker, Space, Dropdown, AntMenu, message, Select,
@@ -25,8 +25,13 @@ import cookie from 'cookie';
 import { NextComponentType } from 'next';
 import dayjs from 'dayjs';
 import styles from '../../../styles/Dashboard.module.css';
-import { Usuario } from '../../../tipos';
-import { API_CONTROLLER_NEWUSER, API_CONTROLLER_LOGOUT, API_CONTROLLER_USERCONTROLLER } from '../../../constantes';
+import { Usuario } from '../../tipos';
+import {
+  API_CONTROLLER_NEWUSER_URL,
+  API_CONTROLLER_LOGOUT_URL,
+  API_CONTROLLER_USERCONTROLLER_URL,
+} from '../../constantes';
+import { getAllUsers } from '../api/models/userByDoc';
 
 const {
   Header, Content, Footer, Sider,
@@ -35,7 +40,7 @@ const {
 const Dashboard: NextComponentType = () => {
   const router = useRouter();
   let form:any;
-  const [searchValue, setSearchValue] = useState('');
+  const [searchText, setSearchText] = useState('');
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedCargo, setSelectedCargo] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -47,9 +52,8 @@ const Dashboard: NextComponentType = () => {
   });
   useEffect(() => {
     axios
-      .get(API_CONTROLLER_USERCONTROLLER)
+      .get(API_CONTROLLER_USERCONTROLLER_URL)
       .then((response) => {
-        // console.log('Usuarios:', response.data); // Imprimir en consola del navegador
         setUsersTable(response.data);
       })
       .catch((error) => {
@@ -94,13 +98,21 @@ const Dashboard: NextComponentType = () => {
     setSelectedKey(e.key);
   };
 
-  const filteredData = usersTable.filter((user: Usuario) => {
-    const searchTerm = searchValue.toLowerCase();
-    return (
-      user.nombres.toLowerCase().includes(searchTerm)
-      || user.documento.toLowerCase().includes(searchTerm)
-    );
-  });
+  const handleSearch = (e: any) => {
+    const searchText = e.target.value.toLowerCase();
+    setSearchText(searchText);
+  };
+  const filteredData = useMemo(() => {
+    return usersTable.filter((user: Usuario) => {
+      return (
+        (user.nombres && user.nombres.toLowerCase().includes(searchText))
+        || (user.documento && user.documento.toLowerCase().includes(searchText))
+        || (user.celular && user.celular.toLowerCase().includes(searchText))
+        || (user.correo && user.correo.toLowerCase().includes(searchText))
+        || (user.sucursal && user.sucursal.toLowerCase().includes(searchText))
+      );
+    });
+  }, [usersTable, searchText]);
 
   const dataSource = usersTable
     .map((user:Usuario, index) => ({
@@ -126,6 +138,17 @@ const Dashboard: NextComponentType = () => {
       dataIndex: 'fechad_creacion',
       key: 'fechad_creacion',
     },
+    {
+      title: 'Acciones',
+      dataIndex: 'acciones',
+      key: 'acciones',
+      render: (_text: any, record: any) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => handleEdit(record)}>Editar</Button>
+          <Button type="danger" onClick={() => handleDelete(record)}>Borrar</Button>
+        </Space>
+      ),
+    },
   ];
 
   const getLoggedInUser = async () => {
@@ -133,7 +156,7 @@ const Dashboard: NextComponentType = () => {
       const cookies = cookie.parse(document.cookie); // Parsea las cookies del documento
       const documento = cookies.userDocumento; // Obtén el documento del usuario de la cookie
       if (documento) {
-        const response = await axios.get(`/api/controllers/userName?documento=${documento}`);
+        const response = await axios.get(`/api/controllers/userName?documento=${documento}`);// REVISA ESTA LINEA
         setLoggedInUser(response.data.nombres); // Actualizar el estado loggedInUser con el nombre del usuario
         console.log(' nombre del usuario', response.data);
       }
@@ -159,7 +182,7 @@ const Dashboard: NextComponentType = () => {
     };
 
     try {
-      await axios.post(API_CONTROLLER_NEWUSER, user);
+      await axios.post(API_CONTROLLER_NEWUSER_URL, user);
       message.success('Usuario creado exitosamente');
       setModalVisible(false);
     } catch (error) {
@@ -177,7 +200,7 @@ const Dashboard: NextComponentType = () => {
             <Input.Search
               placeholder="Buscar..."
               style={{ marginLeft: 16, marginBottom: 16 }}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={handleSearch}
             />
             <Modal
               title="Crear nuevos usuarios"
@@ -210,7 +233,16 @@ const Dashboard: NextComponentType = () => {
                 >
                   <Input disabled />
                 </Form.Item>
-                <Form.Item label="Seleccione el tipo de usuario" name="cargo">
+                <Form.Item
+                  label="Seleccione el tipo de usuario"
+                  name="cargo"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Por favor, seleccione el tipo de usuario',
+                    },
+                  ]}
+                >
                   <Select
                     placeholder="Seleccionar tipo de usuario"
                     onChange={(value) => handleRoleSelection(value)}
@@ -220,19 +252,68 @@ const Dashboard: NextComponentType = () => {
                     <Select.Option value="Seguridad">Seguridad</Select.Option>
                   </Select>
                 </Form.Item>
-                <Form.Item label="Nombre completo" name="nombres">
+                <Form.Item
+                  label="Nombre completo"
+                  name="nombres"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Por favor, ingrese el nombre completo',
+                    },
+                  ]}
+                >
                   <Input />
                 </Form.Item>
-                <Form.Item label="Número de documento" name="documento">
+                <Form.Item
+                  label="Número de documento"
+                  name="documento"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Por favor, ingrese el número de documento',
+                    },
+                  ]}
+                >
                   <Input />
                 </Form.Item>
-                <Form.Item label="Celular" name="celular">
+                <Form.Item
+                  label="Celular"
+                  name="celular"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Por favor, ingrese el número de celular',
+                    },
+                  ]}
+                >
                   <Input />
                 </Form.Item>
-                <Form.Item label="Email corporativo" name="correo">
+                <Form.Item
+                  label="Email corporativo"
+                  name="correo"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Por favor, ingrese el email corporativo',
+                    },
+                    {
+                      type: 'email',
+                      message: 'Por favor, ingrese un correo electrónico válido',
+                    },
+                  ]}
+                >
                   <Input />
                 </Form.Item>
-                <Form.Item label="Sucursal/Zona a la que pertenece" name="sucursal">
+                <Form.Item
+                  label="Sucursal/Zona a la que pertenece"
+                  name="sucursal"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Por favor, ingrese la sucursal o zona a la que pertenece',
+                    },
+                  ]}
+                >
                   <Input />
                 </Form.Item>
               </Form>
@@ -260,7 +341,7 @@ const Dashboard: NextComponentType = () => {
 
   const logout = async () => {
     try {
-      const response = await axios.post(API_CONTROLLER_LOGOUT);
+      const response = await axios.post(API_CONTROLLER_LOGOUT_URL);
       router.push('/auth/login');
       console.log(response);
     } catch (error) {

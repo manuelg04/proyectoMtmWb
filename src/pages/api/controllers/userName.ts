@@ -2,7 +2,7 @@
 // pages/api/userName.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getUserNameByDocument } from '../models/userModel';
+import { getUserNameByDocument } from '../models/userByDoc';
 
 async function getUserName(req: NextApiRequest, res: NextApiResponse) {
   try {

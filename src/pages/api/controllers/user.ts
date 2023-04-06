@@ -2,7 +2,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable import/prefer-default-export */
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getAllUsers } from '../models/userModel';
+import { getAllUsers } from '../models/userByDoc';
 
 export async function getUsers(req: NextApiRequest, res: NextApiResponse) {
   try {

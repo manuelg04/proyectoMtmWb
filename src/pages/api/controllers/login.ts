@@ -8,7 +8,7 @@ import { sign } from 'jsonwebtoken';
 import { serialize } from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createHash } from 'crypto';
-import { getUserCredentials } from '../models/userCredentialsModel';
+import { getUserCredentials } from '../models/userCredentials';
 
 async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
   const { documento, password } = req.body; // aqui puedo traer los datos del usuario
