@@ -52,6 +52,7 @@ const Dashboard: NextComponentType = () => {
     email: '',
     username: '',
   });
+  const [form2] = Form.useForm();
   useEffect(() => {
     axios
       .get(API_CONTROLLER_USERCONTROLLER_URL)
@@ -68,6 +69,20 @@ const Dashboard: NextComponentType = () => {
     setSelectedUser(user);
     setEditModalVisible(true);
   };
+
+  useEffect(() => {
+    if (selectedUser) {
+      form2.setFieldsValue({
+        nombres: selectedUser.nombre,
+        documento: selectedUser.documento,
+        celular: selectedUser.celular,
+        correo: selectedUser.correo,
+        sucursal: selectedUser.sucursal,
+        cargo: selectedUser.cargo,
+        fechad_creacion: dayjs(selectedUser.fechad_creacion).format('DD/MM/YYYY'),
+      });
+    }
+  }, [selectedUser, form2]);
 
   const handleRoleSelection = (value: string) => {
     let roleid;
@@ -251,6 +266,7 @@ const Dashboard: NextComponentType = () => {
               <Form
                 layout="vertical"
                 onFinish={(values) => newUser(values)}
+                form={form2}
                 ref={(el) => {
                   form = el; // Asignar la referencia del formulario al objeto form
                 }}
