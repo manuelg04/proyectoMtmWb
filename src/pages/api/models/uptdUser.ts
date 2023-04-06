@@ -14,6 +14,5 @@ export async function updateUser(user: Usuario): Promise<any> {
   }
 
   // Realiza la consulta SQL UPDATE para actualizar los campos del usuario en la tabla 'usuario'
-  await QUERY_UPDATE_USERS;
-  return [user.nombres, user.celular, user.correo, user.sucursal, user.rolid, user.cargo, user.documento];
+  await db.query(QUERY_UPDATE_USERS, [user.nombres, user.celular, user.correo, user.sucursal, user.rolid, user.cargo, user.documento]);
 }

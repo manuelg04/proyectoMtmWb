@@ -237,6 +237,25 @@ const Dashboard: NextComponentType = () => {
     }
   };
 
+  const updateUser = async (user: Usuario) => {
+    try {
+      await axios.put(API_CONTROLLER_UPDATEUSER_URL, user);
+      message.success('Usuario actualizado exitosamente');
+      setEditModalVisible(false);
+      // Aquí, vuelve a cargar los datos de la tabla o actualiza el estado local según cómo estés manejando los datos
+    } catch (error) {
+      console.log(error);
+      message.error('Error al actualizar el usuario');
+    }
+  };
+
+  const handleUserSubmit = async (values: Usuario) => {
+    if (selectedUser) {
+      updateUser({ ...selectedUser, ...values });
+    } else {
+      newUser(values);
+    }
+  };
   const content = (() => {
     switch (selectedKey) {
       case '1':
@@ -265,7 +284,7 @@ const Dashboard: NextComponentType = () => {
             >
               <Form
                 layout="vertical"
-                onFinish={(values) => newUser(values)}
+                onFinish={(values) => handleUserSubmit(values)}
                 form={form2}
                 ref={(el) => {
                   form = el; // Asignar la referencia del formulario al objeto form
