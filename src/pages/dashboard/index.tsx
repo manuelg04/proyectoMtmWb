@@ -271,15 +271,30 @@ const Dashboard: NextComponentType = () => {
     switch (selectedKey) {
       case '1':
         return (
-          <>
-            <Button type="primary" style={{ marginBottom: 16 }} onClick={showModal}>
-              Crear nuevos usuarios
-            </Button>
-            <Input.Search
-              placeholder="Buscar..."
-              style={{ marginLeft: 16, marginBottom: 16 }}
-              onChange={handleSearch}
-            />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column', // Asegura que los elementos se apilen verticalmente
+              alignItems: 'stretch', // Asegura que todos los elementos ocupen todo el ancho disponible
+              width: '100%',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between', // Alinea los elementos a lo largo del eje horizontal
+                marginBottom: 16,
+              }}
+            >
+              <Button type="primary" style={{ marginBottom: 16 }} onClick={showModal}>
+                Crear nuevos usuarios
+              </Button>
+              <Input.Search
+                placeholder="Buscar..."
+                style={{ width: 'calc(50% - 8px)' }}
+                onChange={handleSearch}
+              />
+            </div>
             <Modal
               title={selectedUser ? 'Editar usuario' : 'Crear nuevos usuarios'}
               open={modalVisible || editModalVisible}
@@ -413,7 +428,7 @@ const Dashboard: NextComponentType = () => {
               columns={columns}
               style={{ width: '100%' }}
             />
-          </>
+          </div>
         );
       default:
         return <div>Contenido del Dashboard</div>;
@@ -494,7 +509,10 @@ const Dashboard: NextComponentType = () => {
                 padding: 24, minHeight: 360, width: '100%', marginLeft: '-180px',
               }}
             >
-              {content}
+              <div className={styles.tableContainer}>
+                {' '}
+                {content}
+              </div>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
