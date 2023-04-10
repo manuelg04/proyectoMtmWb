@@ -32,6 +32,7 @@ import {
   API_CONTROLLER_LOGOUT_URL,
   API_CONTROLLER_USERCONTROLLER_URL,
   API_CONTROLLER_UPDATEUSER_URL,
+  API_CONTROLLER_DELETEUSER_URL,
 } from '../../constantes';
 
 const {
@@ -71,6 +72,17 @@ const Dashboard: NextComponentType = () => {
     console.log(user);
     setSelectedUser(user);
     setEditModalVisible(true);
+  };
+  const handleDelete = async (record: any) => {
+    console.log('Borrar usuario:', record);
+    try {
+      await axios.delete(`${API_CONTROLLER_DELETEUSER_URL}`, { params: { documento: record.documento } });
+      message.success('Usuario eliminado exitosamente');
+      setReloadData((prev) => !prev);
+    } catch (error) {
+      console.log('Error al eliminar el usuario:', error.response.data);
+      message.error('Error al eliminar el usuario');
+    }
   };
   const clearForm = () => {
     form2.resetFields();
@@ -199,11 +211,6 @@ const Dashboard: NextComponentType = () => {
       ),
     },
   ];
-
-  const handleDelete = (record: any) => {
-    console.log('Borrar usuario:', record);
-    // Implementa la lógica para borrar el usuario aquí
-  };
 
   const getLoggedInUser = async () => {
     try {
