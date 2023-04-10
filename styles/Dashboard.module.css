@@ -23,4 +23,30 @@
   .site-layout .site-layout-background {
     min-height: 100vh;
   }
+  .welcomeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 16px 0;
+    background-color: #f0f2f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .welcomeMessage {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #001529;
+  }
+  
+  .username {
+    color: #1890ff;
+  }
+  .content {
+    flex: 1;
+  }
+  .site-layout-background {
+    background-color: white;
+  }
   

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable arrow-body-style */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-shadow */
@@ -69,6 +70,9 @@ const Dashboard: NextComponentType = () => {
     setSelectedUser(user);
     setEditModalVisible(true);
   };
+  const clearForm = () => {
+    form2.resetFields();
+  };
 
   useEffect(() => {
     if (selectedUser) {
@@ -108,6 +112,7 @@ const Dashboard: NextComponentType = () => {
     setSelectedCargo(cargo);
   };
   const showModal = () => {
+    clearForm();
     setModalVisible(true);
   };
 
@@ -232,6 +237,11 @@ const Dashboard: NextComponentType = () => {
       await axios.post(API_CONTROLLER_NEWUSER_URL, user);
       message.success('Usuario creado exitosamente');
       setModalVisible(false);
+      setUsersTable((prevUsers) => {
+        const updatedUsers = [...prevUsers];
+        updatedUsers.push(user);
+        return updatedUsers;
+      });
     } catch (error) {
       message.error('Error al crear el usuario');
     }
@@ -242,6 +252,7 @@ const Dashboard: NextComponentType = () => {
       await axios.put(API_CONTROLLER_UPDATEUSER_URL, user);
       message.success('Usuario actualizado exitosamente');
       setEditModalVisible(false);
+      setUsersTable((prevUsers) => prevUsers.map((prevUser) => (prevUser.documento === user.documento ? user : prevUser))); // Agrega esta línea
       // Aquí, vuelve a cargar los datos de la tabla o actualiza el estado local según cómo estés manejando los datos
     } catch (error) {
       console.log(error);
@@ -400,6 +411,7 @@ const Dashboard: NextComponentType = () => {
                 sucursal: user.sucursal,
               }))}
               columns={columns}
+              style={{ width: '100%' }}
             />
           </>
         );
@@ -425,15 +437,29 @@ const Dashboard: NextComponentType = () => {
   };
   return (
     <>
-      <div>
-        <pre>
+      <div className={styles.welcomeContainer}>
+        <h2 className={styles.welcomeMessage}>
           Bienvenido,
           {' '}
-          {loggedInUser}
-        </pre>
-        <Space wrap style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+          <span className={styles.username}>{loggedInUser}</span>
+        </h2>
+        <Space
+          wrap
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '16px',
+          }}
+        >
+
           <button onClick={() => getProfile()}>profile</button>
-          <Button type="primary" onClick={() => logout()} style={{ alignSelf: 'flex-start' }}>Logout</Button>
+          <Button
+            type="primary"
+            onClick={() => logout()}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            Logout
+          </Button>
         </Space>
       </div>
       <Layout style={{ minHeight: '100vh' }}>
@@ -461,9 +487,13 @@ const Dashboard: NextComponentType = () => {
           </Menu>
         </Sider>
         <Layout className={`${styles['site-layout']} ${styles['site-layout-background']}`}>
-          <Header className="site-layout-background" style={{ padding: 0 }} />
-          <Content style={{ margin: '0 16px' }}>
-            <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+          <Header className="site-layout-background" style={{ padding: 0, marginLeft: '-180px' }} />
+          <Content style={{ margin: '0', minHeight: '100vh' }} className={styles.content}>
+            <div className={styles['site-layout-background']}
+              style={{
+                padding: 24, minHeight: 360, width: '100%', marginLeft: '-180px',
+              }}
+            >
               {content}
             </div>
           </Content>
