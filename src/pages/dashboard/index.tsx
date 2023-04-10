@@ -49,6 +49,7 @@ const Dashboard: NextComponentType = () => {
   const [loggedInUser, setLoggedInUser] = useState('');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [reloadData, setReloadData] = useState(false);
   const [user, setUser] = useState({
     email: '',
     username: '',
@@ -58,12 +59,13 @@ const Dashboard: NextComponentType = () => {
     axios
       .get(API_CONTROLLER_USERCONTROLLER_URL)
       .then((response) => {
+        console.log("Datos recibidos:", response.data);
         setUsersTable(response.data);
       })
       .catch((error) => {
         console.error('Error al obtener usuarios:', error);
       });
-  }, []);
+  }, [reloadData]);
 
   const handleEdit = (user:any) => {
     console.log(user);
@@ -237,12 +239,9 @@ const Dashboard: NextComponentType = () => {
       await axios.post(API_CONTROLLER_NEWUSER_URL, user);
       message.success('Usuario creado exitosamente');
       setModalVisible(false);
-      setUsersTable((prevUsers) => {
-        const updatedUsers = [...prevUsers];
-        updatedUsers.push(user);
-        return updatedUsers;
-      });
+      setReloadData((prev) => !prev);
     } catch (error) {
+      console.error('Error al crear el usuario:', error.response.data);
       message.error('Error al crear el usuario');
     }
   };
@@ -274,15 +273,15 @@ const Dashboard: NextComponentType = () => {
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column', // Asegura que los elementos se apilen verticalmente
-              alignItems: 'stretch', // Asegura que todos los elementos ocupen todo el ancho disponible
+              flexDirection: 'column',
+              alignItems: 'stretch',
               width: '100%',
             }}
           >
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'space-between', // Alinea los elementos a lo largo del eje horizontal
+                justifyContent: 'space-between',
                 marginBottom: 16,
               }}
             >
@@ -467,7 +466,18 @@ const Dashboard: NextComponentType = () => {
           }}
         >
 
-          <button onClick={() => getProfile()}>profile</button>
+          <Button
+            type="text"
+            onClick={() => getProfile()}
+            style={{
+              alignSelf: 'flex-start',
+              color: '#8B4513',
+              fontWeight: 'bold',
+              fontSize: '16px',
+            }}
+          >
+            Mi Perfil
+          </Button>
           <Button
             type="primary"
             onClick={() => logout()}
