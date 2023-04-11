@@ -1,10 +1,6 @@
-export const API_URL = 'http://localhost:3000/api/getInfoTables';
-export const API_CONTROLLER_NEWUSER_URL = '/api/controllers/newUser';
-export const API_CONTROLLER_USERCONTROLLER_URL = '/api/controllers/user';
-export const API_CONTROLLER_LOGOUT_URL = '/api/controllers/logout';
-export const API_CONTROLLER_LOGIN_URL = '/api/controllers/login';
-export const API_CONTROLLER_UPDATEUSER_URL = '/api/controllers/updateUser';
-export const API_CONTROLLER_DELETEUSER_URL = '/api/controllers/deleteUser';
-
-
-export const B = '';
+export const API_CONTROLLER_NEWUSER_URL = process.env.NEXT_PUBLIC_API_NEWUSER_URL;
+export const API_CONTROLLER_USERCONTROLLER_URL = process.env.NEXT_PUBLIC_API_GETALLUSERS_URL;
+export const API_CONTROLLER_LOGOUT_URL = process.env.NEXT_PUBLIC_API_LOGOUT_URL;
+export const API_CONTROLLER_LOGIN_URL = process.env.NEXT_PUBLIC_API_LOGIN_URL;
+export const API_CONTROLLER_UPDATEUSER_URL = process.env.NEXT_PUBLIC_API_UPDATEUSER_URL;
+export const API_CONTROLLER_DELETEUSER_URL = process.env.NEXT_PUBLIC_API_DELETEUSER_URL;

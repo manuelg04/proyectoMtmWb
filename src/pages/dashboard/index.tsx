@@ -20,6 +20,7 @@ import {
   ForkOutlined,
   ContainerOutlined,
   LogoutOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 import cookie from 'cookie';
@@ -56,11 +57,12 @@ const Dashboard: NextComponentType = () => {
     username: '',
   });
   const [form2] = Form.useForm();
+
   useEffect(() => {
     axios
       .get(API_CONTROLLER_USERCONTROLLER_URL)
       .then((response) => {
-        console.log("Datos recibidos:", response.data);
+        console.log('Datos recibidos:', response.data);
         setUsersTable(response.data);
       })
       .catch((error) => {
@@ -78,7 +80,7 @@ const Dashboard: NextComponentType = () => {
     try {
       await axios.delete(`${API_CONTROLLER_DELETEUSER_URL}`, { params: { documento: record.documento } });
       message.success('Usuario eliminado exitosamente');
-      setReloadData((prev) => !prev);
+      setReloadData(!reloadData);
     } catch (error) {
       console.log('Error al eliminar el usuario:', error.response.data);
       message.error('Error al eliminar el usuario');
@@ -206,7 +208,14 @@ const Dashboard: NextComponentType = () => {
       render: (_text: any, record: Usuario) => (
         <Space size="middle">
           <Button type="primary" onClick={() => handleEdit(record)}>Editar</Button>
-          <Button type="danger" onClick={() => handleDelete(record)}>Borrar</Button>
+          <Button type="danger"
+            onClick={() => handleDelete(record)}
+            icon={<DeleteOutlined style={{ color: 'red' }} />}
+            style={{ borderColor: 'transparent', background: 'transparent' }}
+          >
+            Borrar
+
+          </Button>
         </Space>
       ),
     },
@@ -246,7 +255,8 @@ const Dashboard: NextComponentType = () => {
       await axios.post(API_CONTROLLER_NEWUSER_URL, user);
       message.success('Usuario creado exitosamente');
       setModalVisible(false);
-      setReloadData((prev) => !prev);
+      setReloadData(!reloadData);
+      console.log("estado", reloadData);
     } catch (error) {
       console.error('Error al crear el usuario:', error.response.data);
       message.error('Error al crear el usuario');
@@ -258,7 +268,7 @@ const Dashboard: NextComponentType = () => {
       await axios.put(API_CONTROLLER_UPDATEUSER_URL, user);
       message.success('Usuario actualizado exitosamente');
       setEditModalVisible(false);
-      setUsersTable((prevUsers) => prevUsers.map((prevUser) => (prevUser.documento === user.documento ? user : prevUser))); // Agrega esta línea
+      setReloadData(!reloadData);
       // Aquí, vuelve a cargar los datos de la tabla o actualiza el estado local según cómo estés manejando los datos
     } catch (error) {
       console.log(error);

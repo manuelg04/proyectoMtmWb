@@ -16,7 +16,7 @@ export async function authMiddleware(request: NextRequest) {
       return NextResponse.redirect(new URL('auth/login', request.url));
     }
     try {
-      const { payload } = await jwtVerify(jwt, new TextEncoder().encode('secret'));
+      await jwtVerify(jwt, new TextEncoder().encode('secret'));
       //console.log(payload);
       return NextResponse.next();
     } catch (error) {
