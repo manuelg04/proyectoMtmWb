@@ -34,6 +34,7 @@ import {
   API_CONTROLLER_USERCONTROLLER_URL,
   API_CONTROLLER_UPDATEUSER_URL,
   API_CONTROLLER_DELETEUSER_URL,
+  API_CONTROLLER_GETUSERBYDOC_URL,
 } from '../../constantes';
 
 const {
@@ -226,7 +227,7 @@ const Dashboard: NextComponentType = () => {
       const cookies = cookie.parse(document.cookie); // Parsea las cookies del documento
       const documento = cookies.userDocumento; // Obtén el documento del usuario de la cookie
       if (documento) {
-        const response = await axios.get(`/api/controllers/userName?documento=${documento}`);// REVISA ESTA LINEA
+        const response = await axios.get(`${API_CONTROLLER_GETUSERBYDOC_URL}documento=${documento}`);
         setLoggedInUser(response.data.nombres); // Actualizar el estado loggedInUser con el nombre del usuario
         console.log(' nombre del usuario', response.data);
       }
@@ -256,7 +257,7 @@ const Dashboard: NextComponentType = () => {
       message.success('Usuario creado exitosamente');
       setModalVisible(false);
       setReloadData(!reloadData);
-      console.log("estado", reloadData);
+      console.log('estado', reloadData);
     } catch (error) {
       console.error('Error al crear el usuario:', error.response.data);
       message.error('Error al crear el usuario');
