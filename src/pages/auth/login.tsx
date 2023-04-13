@@ -10,16 +10,19 @@ import { message } from 'antd';
 import styles from '../../../styles/Login.module.css';
 import { Usuario } from '../../tipos';
 import { API_CONTROLLER_LOGIN_URL } from '../../constantes';
+import { useUserContext } from '../../contexts/UserContext';
 
 const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // Añade un estado para manejar la carga, typar
+  const { setUserDocument } = useUserContext(); // Utiliza el hook useUserContext
 
   const onFinish = async (values: Usuario) => {
     setLoading(true); // Cambia el estado de carga a verdadero
     try {
       const response = await axios.post(API_CONTROLLER_LOGIN_URL, values);
       if (response.status === 200) {
+        setUserDocument(values.documento); // Guarda el documento del usuario en el contexto global
         router.push('/dashboard');
       }
     } catch (error) {
