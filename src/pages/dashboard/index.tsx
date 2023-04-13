@@ -486,7 +486,7 @@ const Dashboard: NextComponentType = () => {
 
           <Button
             type="text"
-            onClick={() => getProfile()}
+            onClick={() => router.push('/profile')}
             style={{
               alignSelf: 'flex-start',
               color: '#8B4513',

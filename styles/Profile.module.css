@@ -1,0 +1,11 @@
+.container {
+    background-image: linear-gradient(to right, gray, royalblue);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  
+  .titleContainer {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
