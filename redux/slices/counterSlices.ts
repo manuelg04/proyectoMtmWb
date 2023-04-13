@@ -4,10 +4,12 @@ import { RootState } from '../../src/store';
 
 export interface CounterState {
   value: number
+  cantidadAsumar: number
 }
 
 const initialState: CounterState = {
   value: 0,
+  cantidadAsumar: 0,
 };
 
 export const counterSlice = createSlice({
@@ -20,11 +22,13 @@ export const counterSlice = createSlice({
     decrement: (state) => {
       state.value -= 1;
     },
-
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement } = counterSlice.actions;
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 export default counterSlice.reducer;

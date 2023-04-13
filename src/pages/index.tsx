@@ -3,8 +3,9 @@ import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Input, Button, Space } from 'antd';
 import styles from '../../styles/Home.module.css';
-import { decrement, increment} from '../../redux/slices/counterSlices';
+import { decrement, increment, incrementByAmount } from '../../redux/slices/counterSlices';
 import { selectValue } from '../../redux/selectors';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -13,8 +14,18 @@ export default function Home() {
   const count = useSelector(selectValue);
   const dispatch = useDispatch();
 
+
+  const handleIncrementByAmount = (e) => {
+    const valueToIncrement = parseInt(e.target.value, 10);
+    dispatch(incrementByAmount(valueToIncrement));
+  };
+
   return (
     <>
+      <Space wrap>
+        <Input placeholder="Basic usage" onChange={handleIncrementByAmount} />
+        <Button type="primary" onClick={handleIncrementByAmount}>Sumar</Button>
+      </Space>
       <h1>
         El numero es
         {' '}
