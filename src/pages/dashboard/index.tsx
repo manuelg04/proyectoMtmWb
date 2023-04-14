@@ -26,6 +26,7 @@ import { useRouter } from 'next/router';
 import cookie from 'cookie';
 import { NextComponentType } from 'next';
 import dayjs from 'dayjs';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from '../../../styles/Dashboard.module.css';
 import { Usuario } from '../../tipos';
 import {
@@ -36,6 +37,7 @@ import {
   API_CONTROLLER_DELETEUSER_URL,
   API_CONTROLLER_GETUSERBYDOC_URL,
 } from '../../constantes';
+import { selectUserName } from '../../../redux/selectors';
 
 const {
   Header, Content, Footer, Sider,
@@ -57,6 +59,13 @@ const Dashboard: NextComponentType = () => {
     email: '',
     username: '',
   });
+  const userName = useSelector(selectUserName);
+  console.log(userName);
+
+  const dispatch = useDispatch();
+
+  //
+
   const [form2] = Form.useForm();
 
   useEffect(() => {

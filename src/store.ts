@@ -9,7 +9,7 @@ import userReducer from '../redux/slices/userSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['counter'],
+  whitelist: ['counter', 'user'],
 };
 const rootReducer = combineReducers({
   counter: counterReducer,

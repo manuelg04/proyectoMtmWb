@@ -16,16 +16,10 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    name: (state, action: PayloadAction<string>) => {
+    SaveName: (state, action: PayloadAction<string>) => {
       state.name += action.payload;
     },
-    document: (state, action: PayloadAction<string>) => {
+    SaveDocument: (state, action: PayloadAction<string>) => {
       state.document += action.payload;
     },
   },
@@ -33,7 +27,7 @@ export const userSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-  increment, decrement, name, document,
+  SaveName, SaveDocument,
 } = userSlice.actions;
 
 export default userSlice.reducer;

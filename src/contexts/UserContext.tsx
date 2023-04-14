@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { createContext, useContext, useState } from 'react';
 
 interface UserContextValue {
@@ -12,7 +13,7 @@ const UserContext = createContext<UserContextValue>({
 
 export const useUserContext = () => useContext(UserContext);
 
-export const UserProvider: React.FC = ({ children }) => {
+export const UserProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [userDocument, setUserDocument] = useState('');
 
   return (
