@@ -14,7 +14,6 @@ export default function Home() {
   const count = useSelector(selectValue);
   const dispatch = useDispatch();
 
-
   const handleIncrementByAmount = (e) => {
     const valueToIncrement = parseInt(e.target.value, 10);
     dispatch(incrementByAmount(valueToIncrement));
