@@ -6,7 +6,6 @@ import { deleteUser } from '../models/deleteUser';
 export default async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (req.method === 'DELETE') {
     const { documento } = req.query; // Cambiado de 'req.body' a 'req.query'
-    console.log(req.method, req.query);
 
     try {
       await deleteUser(documento as string);

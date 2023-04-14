@@ -7,10 +7,10 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
 // components/Dashboard/Dashboard.tsx
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import {
-  Layout, Menu, Table, Button, Modal, Form, Input, DatePicker, Space, Dropdown, AntMenu, message, Select,
+  Layout, Menu, Table, Button, Modal, Form, Input, Space, message, Select,
 } from 'antd';
 import {
   UserOutlined,
@@ -19,7 +19,6 @@ import {
   HomeOutlined,
   ForkOutlined,
   ContainerOutlined,
-  LogoutOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
 import { useRouter } from 'next/router';
@@ -48,7 +47,6 @@ const Dashboard: NextComponentType = () => {
   let form:any;
   const [searchText, setSearchText] = useState('');
   const [selectedRole, setSelectedRole] = useState(null);
-  const [selectedCargo, setSelectedCargo] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [usersTable, setUsersTable] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState('');
@@ -60,7 +58,6 @@ const Dashboard: NextComponentType = () => {
     username: '',
   });
   const userName = useSelector(selectUserName);
-  console.log(userName);
 
   const dispatch = useDispatch();
 
@@ -72,7 +69,6 @@ const Dashboard: NextComponentType = () => {
     axios
       .get(API_CONTROLLER_USERCONTROLLER_URL)
       .then((response) => {
-        console.log('Datos recibidos:', response.data);
         setUsersTable(response.data);
       })
       .catch((error) => {
@@ -81,18 +77,15 @@ const Dashboard: NextComponentType = () => {
   }, [reloadData]);
 
   const handleEdit = (user:any) => {
-    console.log(user);
     setSelectedUser(user);
     setEditModalVisible(true);
   };
   const handleDelete = async (record: any) => {
-    console.log('Borrar usuario:', record);
     try {
       await axios.delete(`${API_CONTROLLER_DELETEUSER_URL}`, { params: { documento: record.documento } });
       message.success('Usuario eliminado exitosamente');
       setReloadData(!reloadData);
     } catch (error) {
-      console.log('Error al eliminar el usuario:', error.response.data);
       message.error('Error al eliminar el usuario');
     }
   };
@@ -135,7 +128,6 @@ const Dashboard: NextComponentType = () => {
         cargo = null;
     }
     setSelectedRole(roleid);
-    setSelectedCargo(cargo);
   };
   const showModal = () => {
     clearForm();
@@ -238,10 +230,9 @@ const Dashboard: NextComponentType = () => {
       if (documento) {
         const response = await axios.get(`${API_CONTROLLER_GETUSERBYDOC_URL}documento=${documento}`);
         setLoggedInUser(response.data.nombres); // Actualizar el estado loggedInUser con el nombre del usuario
-        console.log(' nombre del usuario', response.data);
       }
     } catch (error) {
-      console.log('Error al obtener el nombre del usuario:', error);
+      message.error('Error al obtener el usuario logueado');
     }
   };
   useEffect(() => {
@@ -266,7 +257,6 @@ const Dashboard: NextComponentType = () => {
       message.success('Usuario creado exitosamente');
       setModalVisible(false);
       setReloadData(!reloadData);
-      console.log('estado', reloadData);
     } catch (error) {
       console.error('Error al crear el usuario:', error.response.data);
       message.error('Error al crear el usuario');
@@ -281,7 +271,6 @@ const Dashboard: NextComponentType = () => {
       setReloadData(!reloadData);
       // Aquí, vuelve a cargar los datos de la tabla o actualiza el estado local según cómo estés manejando los datos
     } catch (error) {
-      console.log(error);
       message.error('Error al actualizar el usuario');
     }
   };
@@ -461,18 +450,12 @@ const Dashboard: NextComponentType = () => {
     }
   })();
 
-  const getProfile = async () => {
-    const profile = await axios.get('/api/profile');
-    setUser(profile.data);
-  };
-
   const logout = async () => {
     try {
-      const response = await axios.post(API_CONTROLLER_LOGOUT_URL);
+      await axios.post(API_CONTROLLER_LOGOUT_URL);
       router.push('/auth/login');
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      message.error('Error al cerrar sesión');
       router.push('/auth/login');
     }
   };

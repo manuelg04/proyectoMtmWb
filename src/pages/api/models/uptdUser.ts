@@ -3,13 +3,20 @@
 import { first } from 'lodash';
 import { Usuario } from '@/tiposproyectomtm';
 import { QUERY_UPDATE_USERS } from '@/querysMySQLproyectomtm';
+import { RowDataPacket } from 'mysql2';
 import db from '../../../db';
 
 export async function updateUser(user: Usuario): Promise<any> {
+  interface UserCount {
+    count: number;
+  }
   // Comprueba si el usuario existe en la base de datos
-  const data = await db.query('SELECT COUNT(*) as count FROM usuario WHERE documento = ?', [user.documento]);
+  const result = await db.query('SELECT COUNT(*) as count FROM usuario WHERE documento = ?', [user.documento]);
+  const data:UserCount[] = (result[0] as RowDataPacket[]).map((row) => ({
+    count: row.count as number,
+  }));
   const primeroArr = first(data);
-  if (first(primeroArr).count === 0) {
+  if (primeroArr && primeroArr.count === 0) {
     throw new Error('El usuario no existe');
   }
 

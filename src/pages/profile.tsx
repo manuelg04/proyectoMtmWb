@@ -2,7 +2,7 @@
 /* eslint-disable spaced-comment */
 import React, { useState, useEffect } from 'react';
 import {
-  Form, Input, Button, Typography,
+  Form, Input, Button, Typography, message,
 } from 'antd';
 import axios from 'axios';
 import { API_CONTROLLER_GETUSERBYDOC_URL } from '@/constantesproyectomtm';
@@ -24,12 +24,11 @@ const Profile = () => {
     try {
       const response = await axios.get(`${API_CONTROLLER_GETUSERBYDOC_URL}documento=${userDocument}`);
       const userName = response.data.nombres;
-      console.log(userName);
       if (userName) {
         setUserProfile({ name: userName, document: userDocument });
       }
     } catch (error) {
-      console.error('Error al obtener el perfil del usuario:', error);
+      message.error('Error al obtener los datos del perfil del usuario');
     }
   };
 
