@@ -12,7 +12,7 @@ export default async function handleDeleteUser(req: NextApiRequest, res: NextApi
       await deleteUser(documento as string);
       res.status(200).json({ message: 'Usuario eliminado correctamente' });
     } catch (error) {
-      res.status(500).json({ message: 'Error al eliminar usuario', error: error.message });
+      res.status(500).json({ message: 'Error al eliminar usuario' });
     }
   } else {
     res.setHeader('Allow', ['DELETE']);

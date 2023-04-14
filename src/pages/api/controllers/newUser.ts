@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { insertUser, User } from '../models/newUser';
+import { Usuario } from '@/tiposproyectomtm';
+import { insertUser } from '../models/newUser';
 
 export default async function CreateUserHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const user: User = req.body;
+      const user: Usuario = req.body;
       await insertUser(user);
       res.status(201).json({ message: 'Usuario creado exitosamente' });
     } catch (error) {
