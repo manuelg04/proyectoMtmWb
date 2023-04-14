@@ -4,6 +4,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import counterReducer from '../redux/slices/counterSlices';
+import userReducer from '../redux/slices/userSlice';
 
 const persistConfig = {
   key: 'root',
@@ -12,6 +13,7 @@ const persistConfig = {
 };
 const rootReducer = combineReducers({
   counter: counterReducer,
+  user: userReducer,
 
 });
 

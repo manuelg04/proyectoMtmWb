@@ -32,6 +32,8 @@ export const userSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const {
+  increment, decrement, name, document,
+} = userSlice.actions;
 
-export default counterSlice.reducer;
+export default userSlice.reducer;
