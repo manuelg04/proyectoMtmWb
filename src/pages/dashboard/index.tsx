@@ -37,6 +37,7 @@ import {
   API_CONTROLLER_GETUSERBYDOC_URL,
 } from '../../constantes';
 import { selectUserName } from '../../../redux/selectors';
+import Vehiculos from './vehiculos';
 
 const {
   Header, Content, Footer, Sider,
@@ -57,11 +58,11 @@ const Dashboard: NextComponentType = () => {
     email: '',
     username: '',
   });
-  const userName = useSelector(selectUserName);
+  // const userName = useSelector(selectUserName);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  //dispatch((valueToIncrement));
+  // dispatch((valueToIncrement));
 
   const [form2] = Form.useForm();
 
@@ -445,6 +446,8 @@ const Dashboard: NextComponentType = () => {
             />
           </div>
         );
+      case '3':
+        return <Vehiculos />;
       default:
         return <div>Contenido del Dashboard</div>;
     }
@@ -507,6 +510,7 @@ const Dashboard: NextComponentType = () => {
             <Menu.Item key="2" icon={<CarOutlined />}>
               Conductores
             </Menu.Item>
+            return (
             <Menu.Item key="3" icon={<TeamOutlined />}>
               Vehículos
             </Menu.Item>

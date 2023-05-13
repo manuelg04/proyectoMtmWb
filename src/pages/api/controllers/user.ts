@@ -7,6 +7,7 @@ import { getAllUsers } from '../models/userByDoc';
 export async function getUsers(req: NextApiRequest, res: NextApiResponse) {
   try {
     const users = await getAllUsers();
+    console.log('Después de llamar a getAllUsers en getUsers:', users);
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener usuarios' });
@@ -18,5 +19,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await getUsers(req, res);
   } else {
     res.status(405).json({ message: 'Método no permitido' });
-}
+  }
 };
